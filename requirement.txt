@@ -1,0 +1,147 @@
+DevOps Assessment: Terraform + Database Reliability
+Stack
+Terraform, AWS, Docker Compose, PostgreSQL/MySQL, GitHub Actions, Shell scripting
+
+Overview
+Design AWS infrastructure using Terraform and demonstrate practical database backup, restore, and query optimization skills.
+Actual AWS deployment is not required. The assignment should be runnable locally for database tasks, and Terraform should be validated through formatting, validation, and plan review.
+Candidates must publish their solution on GitHub and share the repository link.
+
+Objective
+Build and submit a GitHub repository that includes:
+● Terraform code for AWS infrastructure design
+● Docker Compose setup for local database
+● Database migration and seed data
+● Database backup and restore scripts
+● README.md with clear setup and verification steps
+
+Part 1: Terraform Infrastructure Design
+Create Terraform code for the following AWS setup:
+Internet → ALB → ECS/Fargate → RDS
+
+Terraform should include:
+● VPC with public and private subnets
+● ALB security group
+● ECS/Fargate security group
+● RDS security group
+● ECS cluster, task definition and service
+● RDS PostgreSQL or MySQL
+RDS must be private and should only be accessible from ECS/Fargate.
+The application container can use any simple Docker image such as Nginx or a placeholder backend service.
+
+Part 2: Terraform Environment Handling
+Create Terraform structure for at least two environments:
+infra/
+  modules/
+    network/
+    ecs/
+    rds/
+  envs/
+    dev/
+    prod/
+
+Each environment should have separate:
+● variables
+● tfvars
+● backend state configuration
+● resource sizing
+● RDS backup retention
+● deletion protection setting
+Example:
+dev  → smaller instance, shorter backup retention, deletion protection false
+prod → larger instance, longer backup retention, deletion protection true
+
+
+Part 3: Terraform Plan in GitHub
+OPTIONAL : Create a GitHub Actions workflow for Terraform.
+The workflow should run on Pull Requests and perform:
+● terraform fmt
+● terraform init
+● terraform validate
+● terraform plan
+The Terraform plan should be shared in the Pull Request as one of the following:
+● PR comment
+● workflow artifact
+● clearly visible workflow output
+
+Actual AWS deployment is not required. Candidates may use plan-only configuration where needed, but the Terraform code should be realistic and production-oriented.
+
+Part 4: Local Database Test
+Create a local database using Docker Compose.
+Use either:
+● PostgreSQL
+or
+● MySQL
+Create the following tables:
+hotel_bookings
+booking_events
+
+Suggested schema:
+hotel_bookings (
+  id UUID PRIMARY KEY,
+  org_id UUID NOT NULL,
+  hotel_id VARCHAR(100) NOT NULL,
+  city VARCHAR(100) NOT NULL,
+  checkin_date DATE NOT NULL,
+  checkout_date DATE NOT NULL,
+  amount NUMERIC(12,2) NOT NULL,
+  status VARCHAR(50) NOT NULL,
+  created_at TIMESTAMP NOT NULL
+);
+
+booking_events (
+  id BIGSERIAL PRIMARY KEY,
+  booking_id UUID NOT NULL,
+  event_type VARCHAR(100) NOT NULL,
+  payload JSONB,
+  created_at TIMESTAMP NOT NULL
+);
+
+
+Part 5: Seed Data and Indexing
+Add seed data for at least:
+● 100 hotel bookings
+● multiple cities
+● multiple organizations
+● multiple booking statuses
+● booking events for some bookings
+Optimize the following query:
+SELECT org_id, status, COUNT(*), SUM(amount)
+FROM hotel_bookings
+WHERE city = 'delhi'
+  AND created_at >= NOW() - INTERVAL '30 days'
+GROUP BY org_id, status;
+
+Candidate should add the required index or indexes and briefly explain the choice in README.md.
+
+Part 6: Backup and Restore
+Create the following scripts:
+scripts/backup.sh
+scripts/restore.sh
+
+Backup script should create a timestamped database dump.
+Restore script should restore the backup into a fresh local database.
+README.md should explain how to verify that restore worked successfully.
+
+Submission Checklist
+Submit a GitHub repository with:
+● Terraform infrastructure code
+● dev and prod Terraform environment examples
+● Docker Compose database setup
+● SQL migration files
+● Seed data script
+● Database backup script
+● Database restore script
+● README.md with setup and verification steps
+
+How We Will Review
+We will review Terraform using:
+terraform fmt
+terraform init
+terraform validate
+terraform plan -refresh=false
+
+We will review database tasks using:
+docker compose up
+./scripts/backup.sh
+./scripts/restore.sh

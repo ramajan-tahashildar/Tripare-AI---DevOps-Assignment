@@ -1,0 +1,85 @@
+# =============================================================================
+# Secrets & Credentials — NEVER commit these
+# =============================================================================
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
+*.env
+.env.*
+*_credentials
+credentials.json
+secrets.json
+secrets.yaml
+secrets.yml
+
+# AWS credentials / config
+.aws/
+aws-credentials
+aws_credentials
+
+# Terraform sensitive files
+*.tfvars
+*.tfvars.json
+# Exception: example/template tfvars are safe to commit (no real secrets)
+!*.tfvars.example
+!*.tfvars.template
+
+# Terraform state — contains plaintext secrets, never commit
+*.tfstate
+*.tfstate.*
+*.tfstate.backup
+
+# Terraform plan output — may contain sensitive values
+*.tfplan
+tfplan
+plan_output.txt
+
+# Terraform working directories
+**/.terraform/
+**/.terraform.lock.hcl
+
+# Terraform crash logs
+crash.log
+crash.*.log
+
+# =============================================================================
+# Database
+# =============================================================================
+# Local backup dumps — can be large and contain sensitive data
+backups/
+*.sql.gz
+*.dump
+*.pgdump
+
+# =============================================================================
+# OS & Editor artifacts
+# =============================================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+desktop.ini
+
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# =============================================================================
+# Logs
+# =============================================================================
+*.log
+logs/
+
+# =============================================================================
+# Docker
+# =============================================================================
+# Keep docker-compose.yml but ignore any override files with local secrets
+docker-compose.override.yml
+docker-compose.local.yml
