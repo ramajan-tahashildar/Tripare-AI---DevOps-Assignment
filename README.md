@@ -181,6 +181,32 @@ The plan output is posted as a PR comment via `actions/github-script` and also u
 
 ## Part 4 — Local Database Setup
 
+### First-time setup — create your `.env` file
+
+The database credentials are **not** hardcoded anywhere. Before starting, copy the example file and set your own passwords:
+
+```bash
+# 1. Copy the template (do this once)
+cp .env.example .env
+
+# 2. Open .env and set real values — this file is gitignored and never committed
+nano .env   # or use any editor
+```
+
+Your `.env` should look like this:
+
+```env
+POSTGRES_DB=hoteldb
+POSTGRES_USER=dbadmin
+POSTGRES_PASSWORD=your_strong_password
+
+PGADMIN_DEFAULT_EMAIL=admin@hotelapp.local
+PGADMIN_DEFAULT_PASSWORD=your_admin_password
+```
+
+> `.env` is listed in `.gitignore` — it will **never** be committed or pushed.
+> `.env.example` is committed as a safe template with no real secrets.
+
 ### Start the database
 
 ```bash
